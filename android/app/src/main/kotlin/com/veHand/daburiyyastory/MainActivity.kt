@@ -1,0 +1,6 @@
+package com.veHand.daburiyyastory
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
