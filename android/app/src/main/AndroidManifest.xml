@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.veHand.daburiyyastory">
    <application
-        android:label="צעירי דבוריה"
-        android:icon="@mipmap/ic_launcher">
+        android:label="شباب دبورية"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

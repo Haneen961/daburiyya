@@ -17,8 +17,12 @@ class _CoursesState extends State<Courses> {
     });
   }
 
+  bool getComplete = false;
+
   getCourses() async {
     var courses = FirebaseFirestore.instance
+        .collection('centers')
+        .doc('dabburiya')
         .collection('courses')
         .orderBy('createdAt', descending: true);
     courses.snapshots().listen((event) {
@@ -27,6 +31,9 @@ class _CoursesState extends State<Courses> {
         setState(() {
           listCourses.add({'data': element.data(), 'id': element.id});
         });
+      });
+      setState(() {
+        getComplete = true;
       });
     });
   }
@@ -43,59 +50,63 @@ class _CoursesState extends State<Courses> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: listCourses.isEmpty
+        body: !getComplete
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : ListView.builder(
-                itemCount: listCourses.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.blueAccent)),
-                      margin: EdgeInsets.all(3),
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Text('${listCourses[index]['data']['title']}'),
-                          Text('${listCourses[index]['data']['describe']}'),
-                          SizedBox(
-                            height: 7,
-                          ),
-                          listCourses[index]['data']['image'].isNotEmpty
-                              ? Container(
-                                  child: Image.network(
-                                      '${listCourses[index]['data']['image']}'))
-                              : video(
-                                  videoUrl:
-                                      '${listCourses[index]['data']['videoLink']}',
-                                ),
-                          RaisedButton(
-                            onPressed: () {
-                              _showMessageDialog(
-                                  context,
-                                  listCourses[index]['id'],
+            : listCourses.isEmpty
+                ? Center(
+                    child: Text('لا يوجد كورسات حتى الأن'),
+                  )
+                : ListView.builder(
+                    itemCount: listCourses.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.blueAccent)),
+                          margin: EdgeInsets.all(3),
+                          padding: EdgeInsets.all(5),
+                          child: Column(
+                            children: [
+                              Text('${listCourses[index]['data']['title']}'),
+                              Text('${listCourses[index]['data']['describe']}'),
+                              SizedBox(
+                                height: 7,
+                              ),
+                              listCourses[index]['data']['image'].isNotEmpty
+                                  ? Container(
+                                      child: Image.network(
+                                          '${listCourses[index]['data']['image']}'))
+                                  : video(
+                                      videoUrl:
+                                          '${listCourses[index]['data']['videoLink']}',
+                                    ),
+                              RaisedButton(
+                                onPressed: () {
+                                  _showMessageDialog(
+                                      context,
+                                      listCourses[index]['id'],
+                                      listCourses[index]['data']['users']
+                                          .contains(CurrentUser));
+                                },
+                                color: Theme.of(context).primaryColorLight,
+                                child: Text(
                                   listCourses[index]['data']['users']
-                                      .contains(CurrentUser));
-                            },
-                            color: Theme.of(context).primaryColorLight,
-                            child: Text(
-                              listCourses[index]['data']['users']
-                                      .contains(CurrentUser)
-                                  ? 'إلغاء الإشتراك في الكورس'
-                                  : 'اشتراك في الكورس',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+                                          .contains(CurrentUser)
+                                      ? 'إلغاء الإشتراك في الكورس'
+                                      : 'اشتراك في الكورس',
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
       ),
     );
   }
@@ -120,6 +131,8 @@ class _CoursesState extends State<Courses> {
                 onPressed: isRegister
                     ? () {
                         FirebaseFirestore.instance
+                            .collection('centers')
+                            .doc('dabburiya')
                             .collection('courses')
                             .doc(docId)
                             .update({
@@ -130,6 +143,8 @@ class _CoursesState extends State<Courses> {
                       }
                     : () {
                         FirebaseFirestore.instance
+                            .collection('centers')
+                            .doc('dabburiya')
                             .collection('courses')
                             .doc(docId)
                             .update({

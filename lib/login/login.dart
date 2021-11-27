@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import '../main.dart';
 
 class LoginScreen extends StatefulWidget {
+  static String routeName = 'login';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -23,8 +25,6 @@ class _LoginScreenState extends State<LoginScreen>
     FirebaseMessaging.instance.getToken().then((tokenId) {
       setState(() {
         token = tokenId!;
-        print('************');
-        print(token);
       });
     });
   }
@@ -404,6 +404,8 @@ class _LoginScreenState extends State<LoginScreen>
                                   await FirebaseAuth.instance.currentUser;
                               if (response != null) {
                                 await FirebaseFirestore.instance
+                                    .collection('centers')
+                                    .doc('dabburiya')
                                     .collection('users')
                                     .doc(user!.uid)
                                     .set({
@@ -463,7 +465,7 @@ class _LoginScreenState extends State<LoginScreen>
         return userCredential2;
       } on FirebaseException catch (e) {
         if (e.code == 'weak-password') {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           AwesomeDialog(
               context: context,
               title: "خطأ",
@@ -471,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen>
             ..show();
           return null;
         } else if (e.code == 'email-already-in-use') {
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
           AwesomeDialog(
               context: context,
               title: "خطأ",
@@ -480,13 +482,13 @@ class _LoginScreenState extends State<LoginScreen>
           return null;
         }
       } catch (e) {
-        Navigator.of(context).pop();
+        //  Navigator.of(context).pop();
         AwesomeDialog(context: context, title: "خطأ", body: Text(e.toString()))
           ..show();
         return null;
       }
     } else {
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       AwesomeDialog(
           context: context,
           title: "خطأ",
@@ -563,7 +565,7 @@ class _LoginScreenState extends State<LoginScreen>
     if (response != null) {
       Navigator.of(context).pushReplacementNamed('home_page');
     } else {
-      Navigator.of(context).pop();
+      //  Navigator.of(context).pop();
       return AwesomeDialog(
           context: context, title: "خطأ", body: Text("فشل تسجيل الدخول "))
         ..show();

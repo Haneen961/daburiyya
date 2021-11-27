@@ -4,6 +4,7 @@ import 'package:daburiyyastory/screens/participantsPhotos.dart';
 import 'package:daburiyyastory/screens/toolsPictures.dart';
 import 'package:daburiyyastory/screens/veHandNew.dart';
 import 'package:daburiyyastory/screens/videos.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,8 +17,26 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isLogin = false;
+  @override
+  void initState() {
+    super.initState();
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        isLogin = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,15 +48,11 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: //FilePdf(),
-          // PdfViewer(),
-          //   MyHomePage(),
-          LoginScreen(),
-      //    Courses(),
+      home: isLogin ? MyHomePage() : LoginScreen(),
       routes: {
         MyHomePage.route: (context) => MyHomePage(),
         Videos.routeName: (context) => Videos(),
-        //  FullPdfViewerScreen.routeName :(context)=> FullPdfViewerScreen(''),
+        LoginScreen.routeName: (context) => LoginScreen(),
         ParticipantsPhotos.routeName: (context) => ParticipantsPhotos(),
         ToolsPictures.routeName: (context) => ToolsPictures()
       },
@@ -47,7 +62,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   static String route = 'home_page';
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }

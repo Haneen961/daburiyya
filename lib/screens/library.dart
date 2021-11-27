@@ -1,15 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:daburiyyastory/screens/file.dart';
 import 'package:daburiyyastory/screens/participantsPhotos.dart';
-import 'package:daburiyyastory/screens/pdfView.dart';
-import 'package:daburiyyastory/screens/pdfViewer.dart';
-import 'package:daburiyyastory/screens/showPdf.dart';
 import 'package:daburiyyastory/screens/toolsPictures.dart';
 import 'dart:math' as math;
 
 import 'package:daburiyyastory/screens/videos.dart';
+
+import 'flutter_pdfviewer.dart';
 
 const double degrees2Radians = math.pi / 180.0;
 
@@ -21,10 +18,10 @@ class Library extends StatefulWidget {
 class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             InkWell(
@@ -73,7 +70,7 @@ class _LibraryState extends State<Library> {
             )
           ],
         ),
-        Column(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             InkWell(
@@ -101,10 +98,11 @@ class _LibraryState extends State<Library> {
             InkWell(
               onTap: () {
                 // Navigator.of(context).pushNamed(FullPdfViewerScreen.routeName);
-                /*  Navigator.push(
+                Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (BuildContext context) => new PdfShow()));  */
+                        builder: (BuildContext context) =>
+                            new FlutterPDFViewer()));
               },
               child: Container(
                 padding: EdgeInsets.only(
